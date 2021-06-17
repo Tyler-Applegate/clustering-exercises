@@ -1,4 +1,4 @@
-# this is my wrangle module for the mall customers clustering exercises
+# This is my classification acquire module
 
 import pandas as pd
 import numpy as np
@@ -8,8 +8,6 @@ from env import host, user, password
 import matplotlib.pyplot as plt
 import scipy.stats as stats
 import seaborn as sns
-from sklearn.model_selection import train_test_split
-from sklearn.preprocessing import MinMaxScaler
 
 # general framework / template
 def get_connection(db, user=user, host=host, password=password):
@@ -77,32 +75,3 @@ def summarize(df):
     df.hist()
     plt.tight_layout()
     return plt.show()
-
-def get_upper_outliers(s, k=1.5):
-    q1, q3 = s.quantile([0.25, 0.75])
-    iqr = q3 - q1
-    upper_bound = q3 + k * iqr
-    return s.apply(lambda x: max([x - upper_bound, 0]))
-
-def add_upper_outlier_columns(df, k=1.5):
-    for col in df.select_dtypes('number'):
-        df[col + '_outliers_upper'] = get_upper_outliers(df[col], k)
-    return df
-
-def outlier_describe(df):
-    outlier_cols = [col for col in df.columns if col.endswith('_outliers_upper')]
-    for col in outlier_cols:
-        print(col, ': ')
-        subset = df[col][df[col] > 0]
-        print(subset.describe())
-        
-def split_data(df):
-    '''
-    take in a DataFrame and return train, validate, and test DataFrames; stratify on survived.
-    return train, validate, test DataFrames.
-    '''
-    train_validate, test = train_test_split(df, test_size=.2, random_state=1221)
-    train, validate = train_test_split(train_validate, 
-                                       test_size=.3, 
-                                       random_state=1221)
-    return train, validate, test
