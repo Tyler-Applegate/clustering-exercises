@@ -208,4 +208,5 @@ def wrangle_mall_data():
     print(f'   train_scaled shape: {train_scaled.shape}')
     print(f'validate_scaled shape: {validate_scaled.shape}')
     print(f'    test_scaled shape: {test_scaled.shape}')
+    return train, validate, test, train_scaled, validate_scaled, test_scaled
     
